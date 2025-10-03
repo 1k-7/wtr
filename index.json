@@ -1,0 +1,16 @@
+{
+    "libraries": [],
+    "scripts": [
+        {
+            "name": "Wtr-lab.com",
+            "fileName": "WtrLab",
+            "imageURL": "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/icons/wtrlab.png",
+            "id": 133701,
+            "lang": "tr",
+            "ver": "1.0.0",
+            "libVer": "1.0.0",
+            "md5": "YOUR_GENERATED_MD5_HASH_FOR_THE_LUA_FILE_GOES_HERE"
+        }
+    ],
+    "styles": []
+}
