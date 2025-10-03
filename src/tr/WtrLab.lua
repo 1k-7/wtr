@@ -1,10 +1,10 @@
 --[[
-    Wtr-lab.com Extension for Shosetsu (Lua) - Verified & Corrected
+    Wtr-lab.com Extension for Shosetsu (Lua) - Corrected for Scope
 --]]
 
 -- Meta Information
 local name = "Wtr-lab.com"
-local version = "1.0.1" -- Incremented version
+local version = "1.0.2" -- Incremented version for the fix
 local id = 133701
 local lang = "tr"
 local source = "https://wtr-lab.com"
@@ -19,7 +19,8 @@ local function parseNovel(element)
 end
 
 -- Fetch popular novels
-function getPopular(page)
+-- FIXED: Added 'local' keyword
+local function getPopular(page)
     local url = source .. "/seriler?order=popularity&page=" .. page
     local response = http.get(url)
     local document = html.parse(response)
@@ -31,7 +32,8 @@ function getPopular(page)
 end
 
 -- Fetch latest updated novels
-function getLatest(page)
+-- FIXED: Added 'local' keyword
+local function getLatest(page)
     local url = source .. "/seriler?order=update&page=" .. page
     local response = http.get(url)
     local document = html.parse(response)
@@ -43,8 +45,8 @@ function getLatest(page)
 end
 
 -- Search for novels
-function search(query, page)
-    -- URL encode the query to handle spaces and special characters
+-- FIXED: Added 'local' keyword
+local function search(query, page)
     local url = source .. "/seriler?q=" .. http.urlEncode(query) .. "&page=" .. page
     local response = http.get(url)
     local document = html.parse(response)
@@ -56,22 +58,20 @@ function search(query, page)
 end
 
 -- Fetch novel details
-function getNovel(url)
+-- FIXED: Added 'local' keyword
+local function getNovel(url)
     local response = http.get(url)
     local document = html.parse(response)
     local novel = {}
 
     novel.title = document:select("h1.novel-title"):text()
     novel.cover = document:select(".novel-cover img"):attr("src")
-    -- Corrected: Find author or translator and combine selectors
     local authorElement = document:select("a[href*='/yazar/'], a[href*='/cevirmen/']"):first()
     if authorElement then
         novel.author = authorElement:text()
     end
-    -- Corrected: The summary is inside a <p> tag within the div
     novel.summary = document:select("div.novel-summary p"):text()
     novel.genres = {}
-    -- Corrected: More specific selector for genres/tags
     for i, el in ipairs(document:select("div.novel-genres a")) do
         table.insert(novel.genres, el:text())
     end
@@ -79,8 +79,8 @@ function getNovel(url)
 end
 
 -- Fetch chapters for a novel
-function getChapters(url)
-    -- Append the chapters path to the novel URL
+-- FIXED: Added 'local' keyword
+local function getChapters(url)
     local chapter_url = url
     if not string.find(url, "/bolumler$") then
        chapter_url = url .. "/bolumler"
@@ -90,7 +90,6 @@ function getChapters(url)
     local document = html.parse(response)
     local chapters = {}
     
-    -- Corrected: More specific selector for chapter links
     for i, el in ipairs(document:select(".chapter-list a")) do
         local chapter = {}
         chapter.name = el:text()
@@ -98,7 +97,6 @@ function getChapters(url)
         table.insert(chapters, chapter)
     end
     
-    -- Chapters are listed newest to oldest, so they must be reversed
     local reversed_chapters = {}
     for i = #chapters, 1, -1 do
         table.insert(reversed_chapters, chapters[i])
@@ -108,15 +106,16 @@ function getChapters(url)
 end
 
 -- Fetch chapter content
-function getChapterContent(url)
+-- FIXED: Added 'local' keyword
+local function getChapterContent(url)
     local response = http.get(url)
     local document = html.parse(response)
-    -- This selector is correct for the site structure
     local content = document:select("#chapter-content"):html()
     return content
 end
 
 -- Expose public functions to Shosetsu
+-- This return table is how the local functions are made available to the app
 return {
     -- METADATA
     name = name,
